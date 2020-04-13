@@ -1,0 +1,37 @@
+---
+- name: Install apache packages
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - httpd
+    - mod_ssl
+    - openssh
+
+- name: Config Apache
+  lineinfile:
+    dest: "/etc/httpd/conf/httpd.conf"
+    regexp: "^#?NameVirtualHost "
+    line: "NameVirtualHost *:80"
+    state: present
+
+- name:  Restart apache
+  service:
+    name: httpd
+    state: restarted
+    enabled: yes
+  tags:
+    - molecule-idempotence-notest
+
+- name: create lineinfile
+  lineinfile:
+    path: /tmp/test_file.yml
+    create: yes
+    line: "molecule test file"
+
+- name: Create test user
+  user:
+    name: testuser
+    home: /home/testuser
+    password: qwerT1234%
+  no_log: true

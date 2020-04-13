@@ -1,0 +1,50 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: no
+  tasks:
+  - name: Get httpd service facts 
+    service_facts:
+    register: service_status
+
+
+  - name: Assert that httpd service is running
+    assert:
+      that:
+        - service_status.ansible_facts.services['httpd.service']['state'] == "running"
+      fail_msg: "httpd service is not running"
+      success_msg: "verified - httpd service is running"
+  
+  - name: Check config file exists
+    stat:
+      path: "/etc/httpd/conf/httpd.conf"
+    register: config_file_stat
+
+  - name: Assert that conf file exists
+    assert:
+      that:
+        - config_file_stat.stat.exists
+      fail_msg: "httpd.conf doesnot exists"
+      success_msg: "httpd.conf file exists" 
+
+  #- name: Fail the task if config file is missing
+  #  fail:
+  #    msg: "Config file is missing"
+  #  when: config_file_stat.stat.exists == false 
+ 
+  #- name: Check if file exists
+  #  stat:
+  #    path: /tmp/test_file.yml
+  #  register: check_file
+#
+#  - name: changed when file exists
+#    fail:
+#      msg: "file is missing"
+#    when: check_file.stat.exists == false
+
+#  - name: config file exists
+#    debug:
+#      msg: "Config file exists"
+#    when: check_file.stat.exists 

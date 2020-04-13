@@ -1,0 +1,34 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  tasks:
+  - name: Get httpd service facts 
+    service_facts:
+    register: service_status
+
+  - name: debug service
+    debug:
+      msg: " httpd service is {{ service_status.ansible_facts.services['httpd.service']['state'] }}"
+    when: service_status.ansible_facts.services['httpd.service']['state'] is "running" 
+
+  - name: fail the test if httpd is not running
+    fail:
+      msg: "httpd service is not running"
+    when: service_status.ansible_facts.services['httpd.service']['state'] != "running" 
+
+  - name: Check if file exists
+    stat:
+      path: /tmp/test_file.yml
+    register: check_file
+
+  - name: changed when file exists
+    fail:
+      msg: "file is missing"
+    when: check_file.stat.exists == false
+
+  - name: config file exists
+    debug:
+      msg: "Config file exists"
+    when: check_file.stat.exists 

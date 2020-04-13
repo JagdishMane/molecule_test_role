@@ -1,0 +1,23 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint: |
+  ansible-lint molecule/default/converge.yml
+  ansible-lint . -R -r molecule/default/custom_lint/
+platforms:
+  - name: test_instance 
+    image: docker.io/pycontribs/centos:7
+    pre_build_image: true
+    devices:
+      - /dev/fuse:/dev/fuse:rwm
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
+    command: /usr/sbin/init 
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
