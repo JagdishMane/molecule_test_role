@@ -1,6 +1,7 @@
 ---
 - name: debug
   hosts: localhost
+  gather_facts: no
   tasks:
   - name: debug hosts
     debug:
