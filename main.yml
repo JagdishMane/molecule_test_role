@@ -1,7 +1,7 @@
 ---
-- name: debugssss
+- name: debugssss -- error
   hosts: localhost
   tasks:
   - name: debug hosts
     debug:
-      msg: "{{ ansible_hostname }}"
+      msg: "{{ ansible_hostname }}""
