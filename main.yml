@@ -1,5 +1,5 @@
 ---
-- name: debugss
+- name: debugsss
   hosts: localhost
   tasks:
   - name: debug hosts
